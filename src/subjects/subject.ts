@@ -1,10 +1,11 @@
-import { SubscriptionClosedError } from '../errors/subscription-closed-error';
-import { OperatorFunction } from '../interfaces/operator';
-import { ISubscribable } from '../interfaces/subscribable';
-import { Observable } from '../observables/observable';
-import { Subscription } from '../subscription/Subscription';
+import { SubscriptionClosedError } from "../errors/subscription-closed-error";
+import { OperatorFunction } from "../interfaces/operator";
+import { IPipeable } from "../interfaces/pipeable";
+import { ISubscribable } from "../interfaces/subscribable";
+import { Observable } from "../observables/observable";
+import { Subscription } from "../subscription/Subscription";
 
-export class Subject<T> implements ISubscribable<T> {
+export class Subject<T> implements ISubscribable<T>, IPipeable<T> {
   protected sources: Observable<T>[] = [];
   protected isClosed = false;
 
@@ -50,39 +51,6 @@ export class Subject<T> implements ISubscribable<T> {
   }
 
   error(): void {}
-
-  pipe(): Observable<T>;
-  pipe<A>(operator: OperatorFunction<T, A>): Observable<A>;
-  pipe<A, B>(
-    operatorA: OperatorFunction<T, A>,
-    operatorB: OperatorFunction<A, B>
-  ): Observable<B>;
-  pipe<A, B, C>(
-    operatorA: OperatorFunction<T, A>,
-    operatorB: OperatorFunction<A, B>,
-    operatorC: OperatorFunction<B, C>
-  ): Observable<C>;
-  pipe<A, B, C, D>(
-    operatorA: OperatorFunction<T, A>,
-    operatorB: OperatorFunction<A, B>,
-    operatorC: OperatorFunction<B, C>,
-    operatorD: OperatorFunction<C, D>
-  ): Observable<D>;
-  pipe<A, B, C, D, E>(
-    operatorA: OperatorFunction<T, A>,
-    operatorB: OperatorFunction<A, B>,
-    operatorC: OperatorFunction<B, C>,
-    operatorD: OperatorFunction<C, D>,
-    operatorE: OperatorFunction<D, E>
-  ): Observable<E>;
-  pipe<A, B, C, D, E, F>(
-    operatorA: OperatorFunction<T, A>,
-    operatorB: OperatorFunction<A, B>,
-    operatorC: OperatorFunction<B, C>,
-    operatorD: OperatorFunction<C, D>,
-    operatorE: OperatorFunction<D, E>,
-    operatorF: OperatorFunction<E, F>
-  ): Observable<F>;
 
   pipe(...operators: OperatorFunction<any, any>[]): Observable<any> {
     const source = new Observable<T>(this.removeSource);
