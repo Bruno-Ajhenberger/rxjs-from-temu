@@ -14,4 +14,8 @@ export class Subscription {
     this.subscriptions.forEach((s) => s.unsubscribe());
     this.subscriptions = [];
   };
+
+  get activeSubscriptionCount(): number {
+    return this.subscriptions.length;
+  }
 }

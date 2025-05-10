@@ -1,8 +1,8 @@
-import { SubscriptionClosedError } from '../errors/subscription-closed-error';
-import { SubjectHistoryCaretaker } from '../internal/subject-history-caretaker';
-import { Observable } from '../observables/observable';
-import { Subscription } from '../subscription/Subscription';
-import { Subject } from './subject';
+import { SubscriptionClosedError } from "../errors/subscription-closed-error";
+import { SubjectHistoryCaretaker } from "../internal/subject-history-caretaker";
+import { Observable } from "../observables/observable";
+import { Subscription } from "../subscription/Subscription";
+import { Subject } from "./subject";
 
 export class ReplaySubject<T> extends Subject<T> {
   private caretaker: SubjectHistoryCaretaker<T>;
@@ -30,11 +30,8 @@ export class ReplaySubject<T> extends Subject<T> {
   }
 
   public override next(newValue: T): void {
-    if (this.isClosed) {
-      throw new SubscriptionClosedError();
-    }
     this.caretaker.saveToHistory(newValue);
-    this.notifyObservers(newValue);
+    super.next(newValue);
   }
 
   getValues(): Array<T> {

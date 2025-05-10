@@ -17,7 +17,7 @@ export class Subject<T> implements ISubscribable<T>, IPipeable<T> {
     const newSourceObservable = new Observable<T>(() => {
       this.removeSource(newSourceObservable);
     });
-    newSourceObservable.subscribe(next, error, complete);
+    newSourceObservable.subscribe(next, complete, error);
 
     this.sources.push(newSourceObservable);
     return new Subscription(() => {
@@ -27,7 +27,7 @@ export class Subject<T> implements ISubscribable<T>, IPipeable<T> {
 
   next(newValue: T): void {
     if (this.isClosed) {
-      throw new SubscriptionClosedError();
+      return;
     }
     this.notifyObservers(newValue);
   }
@@ -48,9 +48,12 @@ export class Subject<T> implements ISubscribable<T>, IPipeable<T> {
 
   complete(): void {
     this.isClosed = true;
+    this.sources.forEach((s) => s.complete());
   }
 
-  error(): void {}
+  error(error?: Error | string): void {
+    this.sources.forEach((s) => s.error(error));
+  }
 
   pipe(): Observable<T>;
   pipe<A>(operator: OperatorFunction<T, A>): Observable<A>;

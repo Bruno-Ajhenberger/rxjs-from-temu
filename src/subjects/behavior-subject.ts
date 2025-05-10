@@ -1,7 +1,7 @@
-import { DataSource } from '../internal/data-source';
-import { Observable } from '../observables/observable';
-import { Subscription } from '../subscription/Subscription';
-import { Subject } from './subject';
+import { DataSource } from "../internal/data-source";
+import { Observable } from "../observables/observable";
+import { Subscription } from "../subscription/Subscription";
+import { Subject } from "./subject";
 
 export class BehaviorSubject<T> extends Subject<T> {
   private dataSource = new DataSource<T>();
@@ -26,6 +26,11 @@ export class BehaviorSubject<T> extends Subject<T> {
     return new Subscription(() => {
       this.removeSource(newSourceObservable);
     });
+  }
+
+  public override next(newValue: T) {
+    this.dataSource.setData(newValue);
+    super.next(newValue);
   }
 
   getValue(): T | null {
