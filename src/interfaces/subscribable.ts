@@ -1,5 +1,5 @@
-import { Observable } from '../observables/observable';
-import { Subscription } from '../subscription/Subscription';
+import { Observable } from "../observables/observable";
+import { Subscription } from "../subscription/Subscription";
 
 export interface ISubscribable<T> {
   pipe(): Observable<T>;

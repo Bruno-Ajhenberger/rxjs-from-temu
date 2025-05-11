@@ -1,7 +1,10 @@
-import { OperatorFunction } from '../interfaces/operator';
-import { Observable } from '../observables/observable';
+import { OperatorFunction } from "../interfaces/operator";
+import { ISubscribable } from "../interfaces/subscribable";
+import { Observable } from "../observables/observable";
 
-export function merge<T>(observable: Observable<T>): OperatorFunction<T, T> {
+export function merge<T>(
+  outerObservable: ISubscribable<T>
+): OperatorFunction<T, T> {
   return (source: Observable<T>) => {
     const outputObservable = new Observable<T>(source.unsubscribe);
     source.subscribe(
@@ -13,7 +16,7 @@ export function merge<T>(observable: Observable<T>): OperatorFunction<T, T> {
       }
     );
 
-    observable.subscribe((newValue: T) => {
+    outerObservable.subscribe((newValue: T) => {
       outputObservable.next(newValue);
     });
 
