@@ -7,7 +7,11 @@ export function withLatestFrom<T, R>(
 ): OperatorFunction<T, [R | null, T]> {
   let latestValue: R | null = null;
   return (source: Observable<T>) => {
-    const outputObservable = new Observable<[R | null, T]>(source.unsubscribe);
+    const unsubscribe = () => {
+      subscription.unsubscribe();
+    };
+
+    const outputObservable = new Observable<[R | null, T]>(unsubscribe);
     const subscription = source.subscribe(
       (newValue: T) => {
         outputObservable.next([latestValue, newValue]);
@@ -23,6 +27,7 @@ export function withLatestFrom<T, R>(
     subscription.add(
       outerObservable.subscribe((value) => {
         latestValue = value;
+        console.log(latestValue);
       })
     );
 

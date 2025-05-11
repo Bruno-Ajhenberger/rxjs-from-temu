@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { Observable, take } from "../../index";
+import { Observable } from "../../index";
 import { withLatestFrom } from "../../src/operators/with-latest-from";
 
 describe("Observable piped with latest from operator", () => {
